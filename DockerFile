@@ -1,18 +1,24 @@
-# اختيار صورة أساس
-FROM python:3.11-slim-bullseye
+# 1️⃣ استخدام صورة Python خفيفة
+FROM python:3.11-slim
 
-# تعيين مجلد العمل
+# 2️⃣ تعيين مجلد العمل
 WORKDIR /app
 
-# نسخ ملف requirements وتثبيت المكتبات
+# 3️⃣ نسخ ملف requirements
 COPY requirements.txt .
+
+# 4️⃣ تحديث pip وتثبيت torch CPU فقط
+RUN pip install --upgrade pip \
+    && pip install torch==2.2.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+# 5️⃣ تثبيت باقي المكتبات
 RUN pip install --no-cache-dir -r requirements.txt
 
-# نسخ باقي الملفات
+# 6️⃣ نسخ باقي ملفات التطبيق
 COPY . .
 
-# فتح البورت 7860
+# 7️⃣ فتح البورت
 EXPOSE 7860
 
-# تشغيل Uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+# 8️⃣ تشغيل Uvicorn من مجلد Back-end
+CMD ["uvicorn", "Back-end.main:app", "--host", "0.0.0.0", "--port", "7860", "--reload"]
