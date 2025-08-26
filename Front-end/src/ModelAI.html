@@ -29,17 +29,21 @@
       ⬅ Return
     </a>
 
-    <!-- Result JSON -->
-    {% if result %}
-      <div class="mt-6 p-4 bg-gray-50 border rounded-lg text-gray-700 whitespace-pre-wrap">
-        <strong>Result JSON:</strong>
-        <pre>{{ result | tojson(indent=2) }}</pre>
-      </div>
-    {% else %}
-      <div class="mt-6 p-4 bg-gray-50 border rounded-lg text-gray-700">
-        Your result will appear here...
-      </div>
-    {% endif %}
+<!-- Result JSON -->
+{% if result %}
+  <div class="mt-6 p-4 bg-gray-50 border rounded-lg text-gray-700 whitespace-pre-wrap">
+    <strong>Result JSON:</strong>
+    <pre>{{ result | tojson(indent=2) }}</pre>
+  </div>
+{% elif error %}
+  <div class="mt-6 p-4 bg-red-100 border border-red-400 rounded-lg text-red-700">
+    ⚠ {{ error }}
+  </div>
+{% else %}
+  <div class="mt-6 p-4 bg-gray-50 border rounded-lg text-gray-700">
+    Your result will appear here...
+  </div>
+{% endif %}
 
   </div>
 

@@ -27,25 +27,33 @@ def analyze_sentiment(request: Request, text: str = Form(...)):
     try:
         if not text.strip():
             raise HTTPException(status_code=400, detail="Le texte ne peut pas être vide.")
-        
+
         # Appel du modèle
         result = pipe(text)[0]
 
+        # JSON structuré
         result_json = {
-            "text": text,
             "result": {
+                "text": text,
                 "sentiment": result.get("label", "UNKNOWN"),
                 "score": result.get("score", 0.0)
             }
         }
 
-        return templings.TemplateResponse("ModelAI.html", {
-            "request": request,
-            "result": result_json
-        })
+        # Retourner HTML + JSON dans le contexte
+        return templings.TemplateResponse(
+            "ModelAI.html",
+            {"request": request, "result": result_json}
+        )
 
     except HTTPException as e:
-        return JSONResponse(status_code=e.status_code, content={"error": e.detail})
+        return templings.TemplateResponse(
+            "ModelAI.html",
+            {"request": request, "error": e.detail}
+        )
 
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": f"Une erreur est survenue : {str(e)}"})
+        return templings.TemplateResponse(
+            "ModelAI.html",
+            {"request": request, "error": f"Une erreur est survenue : {str(e)}"}
+        )
