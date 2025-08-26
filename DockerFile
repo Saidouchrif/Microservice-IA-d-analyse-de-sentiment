@@ -1,18 +1,18 @@
-# Étape 1 : choisir l’image de base
-FROM python:3.11-slim
+# اختيار صورة أساس
+FROM python:3.11-slim-bullseye
 
-# Étape 2 : définir le répertoire de travail
+# تعيين مجلد العمل
 WORKDIR /app
 
-# Étape 3 : copier les fichiers
-COPY ./ /app
+# نسخ ملف requirements وتثبيت المكتبات
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Étape 4 : installer les dépendances
-RUN pip install --no-cache-dir fastapi uvicorn jinja2
+# نسخ باقي الملفات
+COPY . .
 
-
-# Exposer le port (7860 comme demandé)
+# فتح البورت 7860
 EXPOSE 7860
 
-# Commande de démarrage (Uvicorn)
+# تشغيل Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]

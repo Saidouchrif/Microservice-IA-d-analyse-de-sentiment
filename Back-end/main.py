@@ -2,6 +2,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
 from BaseModel import Item
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import HTTPException
 from Model import pipe
 app=FastAPI()
 
@@ -16,17 +17,33 @@ def get_model():
 
 @app.post('/model')
 def analyze_sentiment(request: Request, text: str = Form(...)):
-    result = pipe(text)[0]
-    # renommage du label en sentiment
-    result_json = {
-        "text": text,
-        "result": {
-            "sentiment": result["label"],
-            "score": result["score"]
+    try:
+        # Vérifier que le texte n'est pas vide
+        if not text.strip():
+            raise HTTPException(status_code=400, detail="Le texte ne peut pas être vide.")
+        
+        # Appel du modèle
+        result = pipe(text)[0]
+
+        # Préparer le JSON avec renommage label -> sentiment
+        result_json = {
+            "text": text,
+            "result": {
+                "sentiment": result.get("label", "UNKNOWN"),
+                "score": result.get("score", 0.0)
+            }
         }
-    }
-    return templings.TemplateResponse("ModelAi.html", {
-        "request": request,
-        "result": result_json
-    })
+
+        return templings.TemplateResponse("ModelAi.html", {
+            "request": request,
+            "result": result_json
+        })
+
+    except HTTPException as e:
+        # Erreur connue (ex. texte vide)
+        return JSONResponse(status_code=e.status_code, content={"error": e.detail})
+
+    except Exception as e:
+        # Autres erreurs (modèle, pipeline, etc.)
+        return JSONResponse(status_code=500, content={"error": f"Une erreur est survenue : {str(e)}"})
 

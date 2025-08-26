@@ -2,5 +2,4 @@ fastapi
 uvicorn
 jinja2
 transformers
-torch
-pydantic
+torch==2.2.2
