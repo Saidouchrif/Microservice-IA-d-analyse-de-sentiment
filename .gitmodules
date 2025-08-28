@@ -1,3 +1,7 @@
 [submodule "Docker/Docker/Sentement-Docker"]
 	path = Docker/Docker/Sentement-Docker
 	url = https://huggingface.co/spaces/SaidOuchrif/Sentement-Docker
+
+[submodule "Docker/Sentement-Docker"]
+	path = Docker/Sentement-Docker
+	url = https://huggingface.co/spaces/SaidOuchrif/Sentement-Docker
