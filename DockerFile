@@ -9,7 +9,7 @@ COPY requirements.txt .
 
 # 4️⃣ Mettre à jour pip et installer Torch (version CPU uniquement)
 RUN pip install --upgrade pip \
-    && pip install torch==2.2.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
+    && pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu "torch>=2.2,<3"
 
 # 5️⃣ Installer les autres dépendances listées dans requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
