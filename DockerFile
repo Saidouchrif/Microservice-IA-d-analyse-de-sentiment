@@ -1,24 +1,24 @@
-# 1️⃣ استخدام صورة Python خفيفة
+# 1️⃣ Utiliser une image Python légère basée sur Debian slim
 FROM python:3.11-slim
 
-# 2️⃣ تعيين مجلد العمل
+# 2️⃣ Définir le répertoire de travail à l’intérieur du conteneur
 WORKDIR /app
 
-# 3️⃣ نسخ ملف requirements
+# 3️⃣ Copier le fichier requirements.txt (liste des dépendances)
 COPY requirements.txt .
 
-# 4️⃣ تحديث pip وتثبيت torch CPU فقط
+# 4️⃣ Mettre à jour pip et installer Torch (version CPU uniquement)
 RUN pip install --upgrade pip \
     && pip install torch==2.2.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
-# 5️⃣ تثبيت باقي المكتبات
+# 5️⃣ Installer les autres dépendances listées dans requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 6️⃣ نسخ باقي ملفات التطبيق
+# 6️⃣ Copier le reste des fichiers du projet dans le conteneur
 COPY . .
 
-# 7️⃣ فتح البورت
+# 7️⃣ Exposer le port 7860 pour permettre l’accès externe à l’application
 EXPOSE 7860
 
-# 8️⃣ تشغيل Uvicorn من مجلد Back-end
+# 8️⃣ Lancer Uvicorn en pointant vers l’application FastAPI située dans le dossier Back-end
 CMD ["uvicorn", "Back-end.main:app", "--host", "0.0.0.0", "--port", "7860", "--reload"]
